@@ -1,0 +1,150 @@
+﻿<Window x:Class="EventEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="BattleTech Event Editor" SizeToContent="Height" MinHeight="350" MinWidth="900" Width="900">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="New" CanExecute="CanAlwaysExecute" Executed="NewCommand_Executed" />
+        <CommandBinding Command="Open" CanExecute="CanAlwaysExecute" Executed="OpenCommand_Executed" />
+    </Window.CommandBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Row="0">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Command="New" />
+                    <MenuItem Command="Open"/>
+                    <MenuItem Header="_Save"/>
+                    <Separator />
+                    <MenuItem Header="_Close"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+
+        <Grid Grid.Row="1" Height="Auto">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10" />
+
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="*" MinHeight="125"/>
+
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="10" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" MinWidth="100"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" MinWidth="150"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" MinWidth="150"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" MinWidth="40"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" MinWidth="100"/>
+                <ColumnDefinition Width="10" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="1" Grid.Column="1" Content="Type:" HorizontalContentAlignment="Right" Margin="2"/>
+            <ComboBox Grid.Row="1" Grid.Column="2"  SelectedValue="{Binding EventType}" ItemsSource="{Binding EventTypes}" Margin="2"/>
+
+            <Label Grid.Row="1" Grid.Column="3" Content="Name:" HorizontalContentAlignment="Right" Margin="2"/>
+            <TextBox Grid.Row="1" Grid.Column="4" TextWrapping="NoWrap" Text="{Binding Description.Name}" MaxLines="1" Margin="2"/>
+
+            <Label Grid.Row="1" Grid.Column="5" Content="Image:" HorizontalContentAlignment="Right" Margin="2"/>
+            <TextBox Grid.Row="1" Grid.Column="6" TextWrapping="NoWrap" Text="{Binding Description.Icon}" MaxLines="1" Margin="2"/>
+
+            <Label Grid.Row="1" Grid.Column="7" Content="Weight:" HorizontalContentAlignment="Right" Margin="2"/>
+            <TextBox Grid.Row="1" Grid.Column="8" TextWrapping="NoWrap" Text="{Binding Weight}" PreviewTextInput="NumberValidationTextBox" MaxLines="1" HorizontalContentAlignment="Right" Margin="2"/>
+
+            <Label Grid.Row="1" Grid.Column="9" Content="Scope:" HorizontalContentAlignment="Right" Margin="2"/>
+            <ComboBox Grid.Row="1" Grid.Column="10"  SelectedValue="{Binding Scope}" ItemsSource="{Binding EventScopes}" HorizontalContentAlignment="Right" Margin="2"/>
+
+            <Label Grid.Row="2" Grid.Column="1" Content="Reqs:" HorizontalContentAlignment="Right" Margin="2"/>
+            <Grid Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="9">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ListBox Name="RequirementListBox" SelectionMode="Single" Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"  ItemsSource="{Binding EditorRequirements}" MouseDoubleClick="Requirements_DoubleClick" Margin="2"/>
+                <Button Grid.Row="0" Grid.Column="2" Width="60" Margin="2" Content="Add" Click="AddRequirement_OnClick"/>
+                <Button Grid.Row="1" Grid.Column="2" Width="60" Margin="2" Content="Edit" Click="EditRequirement_OnClick"/>
+                <Button Grid.Row="2" Grid.Column="2" Width="60" Margin="2" Content="Remove" Click="RemoveRequirement_OnClick"/>
+            </Grid>
+
+            <Label Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Right" MaxWidth="60" Margin="2">
+                <TextBlock Text="Add'l Objects:" TextWrapping="Wrap" TextAlignment="Right"/>
+            </Label>
+            <Grid Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="9">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ListBox Name="AdditionalObjectsListBox" SelectionMode="Single" Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"  ItemsSource="{Binding AdditionalObjects}" MouseDoubleClick="AdditionalObjects_DoubleClick"  Margin="2"/>
+                <Button Grid.Row="0" Grid.Column="2" Width="60" Margin="2" Content="Add" Click="AddAdditionalObject_OnClick"/>
+                <Button Grid.Row="1" Grid.Column="2" Width="60" Margin="2" Content="Edit" Click="EditAdditionalObject_OnClick"/>
+                <Button Grid.Row="2" Grid.Column="2" Width="60" Margin="2" Content="Remove" Click="RemoveAdditionalObject_OnClick"/>
+            </Grid>
+
+            <Label Grid.Row="4" Grid.Column="1" Content="Details:" HorizontalContentAlignment="Right" Margin="2" />
+            <TextBox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="9" MinHeight="125" Text="{Binding Description.Details}" AcceptsReturn="True" TextWrapping="Wrap" Margin="2"/>
+
+            <Label Grid.Row="5" Grid.Column="1" Content="Options:" HorizontalContentAlignment="Right" Margin="2"/>
+            <Grid Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="9">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ListBox Name="OptionsListBox" SelectionMode="Single" Grid.Row="0" Grid.Column="1" Grid.RowSpan="4"  ItemsSource="{Binding Options}" MouseDoubleClick="Options_DoubleClick" Margin="2"/>
+                <Button Grid.Row="0" Grid.Column="2" Width="60" Margin="2" Content="Add" Click="AddOption_OnClick"/>
+                <Button Grid.Row="1" Grid.Column="2" Width="60" Margin="2" Content="Edit" Click="EditOption_OnClick"/>
+                <Button Grid.Row="2" Grid.Column="2" Width="60" Margin="2" Content="Remove" Click="RemoveOption_OnClick"/>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</Window>
